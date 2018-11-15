@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RoguskiWarehouse</string>
+    <string name="mainMessage">0</string>
+    <string name="button1">Toast</string>
+    <string name="button2">Count</string>
+    <string name="button3">Random</string>
+    <string name="random_page_header">Here is random number between 0 and %1d</string>
+    <string name="lista">Lista</string>
+</resources>
