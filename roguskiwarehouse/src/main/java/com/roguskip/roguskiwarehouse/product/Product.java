@@ -58,7 +58,7 @@ public class Product {
                         "p.price AS price, \n" +
                         "p.quantity as quantity, \n" +
                         "m.id AS manufacutrerId, \n" +
-                        "m.name AS manufacutrerName \n" +
+                        "m.name AS manufacturerName \n" +
                 ") \n" +
                 "FROM Product p \n" +
                 "JOIN Manufacturer m ON m.id = p.manufacturer.id\n" +

@@ -49,7 +49,7 @@ class ProductListAdapter(private val activity: Activity,
         val currencyPrice = vi.findViewById<TextView>(R.id.currencyPrice)
         val quantity = vi.findViewById<TextView>(R.id.quantity)
         manufacturerTitle.text = this.productList[i].manufacturerName
-        productName.text = this.productList[i].name
+        productName.text = this.productList[i].productName
         currencyPrice.text = NumberFormat.getCurrencyInstance().format(this.productList[i].price)
         quantity.text = "Quantity: " + this.productList[i].quantity.toString()
         return vi
@@ -61,7 +61,7 @@ class ProductListAdapter(private val activity: Activity,
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ result ->
                 productList.clear()
-                productList.addAll(result.list.products)
+                productList.addAll(result)
                 notifyDataSetChanged()
             },{ error ->
                 Toast.makeText(context, "Refresh error: ${error.message}", Toast.LENGTH_LONG).show()

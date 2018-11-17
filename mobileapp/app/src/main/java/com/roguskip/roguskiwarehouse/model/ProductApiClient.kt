@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 
 interface ProductApiClient {
-    @GET("products") fun getProducts(): Observable<ProductEmbedded>
+    @GET("products") fun getProducts(): Observable<List<Product>>
 
     companion object {
         fun create(): ProductApiClient {

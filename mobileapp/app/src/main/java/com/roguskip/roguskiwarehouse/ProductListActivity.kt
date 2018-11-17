@@ -34,7 +34,7 @@ class ProductListActivity : AppCompatActivity() {
     }
 
     private fun prepareProductList() {
-        var product = Product("Samsung", "Galaxy", BigDecimal(23.23), 5)
+        /*var product = Product("Samsung", "Galaxy", BigDecimal(23.23), 5)
         productList.add(product)
         product = Product("Apple", "S8", BigDecimal(2000.23), 5)
         productList.add(product)
@@ -45,7 +45,7 @@ class ProductListActivity : AppCompatActivity() {
         product = Product("Apple", "S7 PLUS", BigDecimal(2500.23), 3)
         productList.add(product)
         product = Product("Samsung", "J 5", BigDecimal(2500.23), 3)
-        productList.add(product)
+        productList.add(product)*/
 
         adapter?.notifyDataSetChanged()
     }
