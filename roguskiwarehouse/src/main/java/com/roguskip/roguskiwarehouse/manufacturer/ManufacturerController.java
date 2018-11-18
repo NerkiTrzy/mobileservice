@@ -16,12 +16,14 @@ public class ManufacturerController {
     ManufacturerRepository manufacturerRepository;
 
     @PostMapping("/manufacturers")
+   // @PreAuthorize("hasRole('USER')")
     public Manufacturer createManufacturer(@Valid @RequestBody Manufacturer manufacturer) {
         manufacturer.setId(null);
         return manufacturerRepository.save(manufacturer);
     }
 
     @GetMapping("/manufacturers")
+   // @PreAuthorize("hasRole('USER')")
     public List<Manufacturer> getManufacturers() {
         return manufacturerRepository.findAll(Sort.by("name"));
     }

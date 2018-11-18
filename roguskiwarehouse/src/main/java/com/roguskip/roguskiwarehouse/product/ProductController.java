@@ -4,7 +4,6 @@ import com.roguskip.roguskiwarehouse.exceptions.ResourceNotFoundException;
 import com.roguskip.roguskiwarehouse.manufacturer.Manufacturer;
 import com.roguskip.roguskiwarehouse.manufacturer.ManufacturerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +25,7 @@ public class ProductController {
     }
 
     @PostMapping("/manufacturers/{manufacturerId}/products")
+    //@PreAuthorize("hasRole('USER')")
     public Product createProduct(@PathVariable(name = "manufacturerId") Long manufacturerId,
                                  @Valid @RequestBody Product product) {
 
@@ -39,6 +39,7 @@ public class ProductController {
     }
 
     @PostMapping(path = "/products/{productId}/change-quantity")
+   // @PreAuthorize("hasRole('USER')")
     public Product changeQuantity(@PathVariable(value = "productId") Long productId,
                                     @Valid @RequestBody Integer quantity) {
 
@@ -51,6 +52,7 @@ public class ProductController {
     }
 
     @PutMapping(path = "/products/{productId}/decrease-quantity", params ={"quantity"})
+    //@PreAuthorize("hasRole('USER')")
     public Product decreaseQuantity(@PathVariable(value = "productId") Long productId,
                                     @RequestParam(value = "quantity") Integer quantity) {
 
@@ -63,6 +65,7 @@ public class ProductController {
     }
 
     @DeleteMapping(path = "/products/{productId}")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable(value = "productId") Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
