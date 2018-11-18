@@ -20,6 +20,8 @@
         <activity android:name=".SecondActivity">
         </activity>
         <activity android:name=".ProductListActivity"></activity>
+        <activity android:name=".AddProductActivity"></activity>
+        <activity android:name=".ChangeProductQuantityActivity"></activity>
     </application>
 
 </manifest>

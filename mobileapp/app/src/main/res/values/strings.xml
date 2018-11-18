@@ -6,4 +6,6 @@
     <string name="button3">Random</string>
     <string name="random_page_header">Here is random number between 0 and %1d</string>
     <string name="lista">Lista</string>
+    <string name="newProduct">Nowy Produkt</string>
+    <string name="addProductTitle">Dodawanie produktu</string>
 </resources>

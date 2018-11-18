@@ -1,11 +1,12 @@
 package com.roguskip.roguskiwarehouse
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.ListView
 import com.roguskip.roguskiwarehouse.model.Product
 import com.roguskip.roguskiwarehouse.model.ProductListAdapter
-import java.math.BigDecimal
 import java.util.*
 
 class ProductListActivity : AppCompatActivity() {
@@ -18,37 +19,21 @@ class ProductListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.product_list)
 
-        listView = findViewById<ListView>(R.id.productListView)
+        listView = findViewById(R.id.productListView)
         adapter = ProductListAdapter(this, productList, this.applicationContext)
         (listView as ListView).adapter = adapter
 
-        //prepareProductList()
+         (listView as ListView).setOnItemClickListener  {
+             adapterView, view, position, id ->
+             val intent = Intent(this, ChangeProductQuantityActivity::class.java)
+             intent.putExtra("product", productList.get(position))
+             startActivity(intent)
+         }
 
-//        (listView as ListView).onItemClickListener = AdapterView.OnItemClickListener{
-//                adapterView,
-//                view,
-//                i,
-//                l -> Toast.makeText(applicationContext, productList?.get(i)?.name,
-//            Toast.LENGTH_SHORT).show()
-//        }
+
     }
 
-    private fun prepareProductList() {
-        /*var product = Product("Samsung", "Galaxy", BigDecimal(23.23), 5)
-        productList.add(product)
-        product = Product("Apple", "S8", BigDecimal(2000.23), 5)
-        productList.add(product)
-        product = Product("Apple", "S8 PLUS", BigDecimal(2500.23), 3)
-        productList.add(product)
-        product = Product("Apple", "S8 PLUS", BigDecimal(2500.23), 3)
-        productList.add(product)
-        product = Product("Apple", "S7 PLUS", BigDecimal(2500.23), 3)
-        productList.add(product)
-        product = Product("Samsung", "J 5", BigDecimal(2500.23), 3)
-        productList.add(product)*/
-
-        adapter?.notifyDataSetChanged()
+    fun createProduct(view: View) {
+        startActivity(Intent(this, AddProductActivity::class.java))
     }
-
-
 }

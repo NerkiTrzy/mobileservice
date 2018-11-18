@@ -36,8 +36,8 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-    @PutMapping(path = "/products/{productId}/increase-quantity", params ={"quantity"})
-    public Product increaseQuantity(@PathVariable(value = "productId") Long productId,
+    @PutMapping(path = "/products/{productId}/change-quantity", params ={"quantity"})
+    public Product changeQuantity(@PathVariable(value = "productId") Long productId,
                                     @RequestParam(value = "quantity") Integer quantity) {
 
         Product product = productRepository.findById(productId)

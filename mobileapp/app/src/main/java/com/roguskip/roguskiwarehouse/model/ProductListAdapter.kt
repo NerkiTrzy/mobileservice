@@ -24,7 +24,7 @@ class ProductListAdapter(private val activity: Activity,
 
     init {
         this.productList = productList as ArrayList<Product>
-        this.refreshMovies()
+        this.refreshProducts()
     }
 
     override fun getCount(): Int {
@@ -55,7 +55,7 @@ class ProductListAdapter(private val activity: Activity,
         return vi
     }
 
-    fun refreshMovies() {
+    private fun refreshProducts() {
         client.getProducts()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
