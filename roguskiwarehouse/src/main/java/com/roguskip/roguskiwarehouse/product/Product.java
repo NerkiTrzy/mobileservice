@@ -57,7 +57,7 @@ public class Product {
                         "p.currency AS currency, \n" +
                         "p.price AS price, \n" +
                         "p.quantity as quantity, \n" +
-                        "m.id AS manufacutrerId, \n" +
+                        "m.id AS manufacturerId, \n" +
                         "m.name AS manufacturerName \n" +
                 ") \n" +
                 "FROM Product p \n" +

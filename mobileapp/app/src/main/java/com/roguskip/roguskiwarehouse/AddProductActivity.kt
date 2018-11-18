@@ -1,22 +1,20 @@
 package com.roguskip.roguskiwarehouse
 
-import android.graphics.Color
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.Toast.LENGTH_LONG
-import com.roguskip.roguskiwarehouse.model.Manufacturer
-import com.roguskip.roguskiwarehouse.model.ManufacturerApiClient
+import com.roguskip.roguskiwarehouse.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.stream.Collectors
 
 
-class AddProductActivity : AppCompatActivity(), OnItemSelectedListener {
-    val manufacturerClient by lazy { ManufacturerApiClient.create() }
+class AddProductActivity : AppCompatActivity(){
+    private val manufacturerClient by lazy { ManufacturerApiClient.create() }
+    private val productClient by lazy { ProductApiClient.create() }
+
 
     private var manufacturerList: ArrayList<Manufacturer> = ArrayList()
 
@@ -29,23 +27,12 @@ class AddProductActivity : AppCompatActivity(), OnItemSelectedListener {
         this.setManufacturerSpinner()
     }
 
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        (parent!!.getChildAt(0) as TextView).setTextColor(Color.BLUE)
-        (parent.getChildAt(0) as TextView).textSize = 5f
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
-    }
-
     private fun setManufacturerSpinner() {
-        val spinner : Spinner = findViewById(R.id.manufacturersSpinner)
+        this.spinner = findViewById(R.id.manufacturersSpinner)
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, manufacturerList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // Set Adapter to Spinner
-        spinner.adapter = adapter
+        spinner!!.adapter = adapter
 
         manufacturerClient.getManufacturers()
             .subscribeOn(Schedulers.io())
@@ -58,15 +45,43 @@ class AddProductActivity : AppCompatActivity(), OnItemSelectedListener {
                 Log.e("ERRORS", error.message)
             })
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                Toast.makeText(this@AddProductActivity, manufacturerList[p2].name, LENGTH_LONG).show()
+
+                //Toast.makeText(this@AddProductActivity, manufacturerList[p2].name, LENGTH_LONG).show()
             }
 
         }
+    }
+
+    fun addProduct(view: View) {
+        val product: Product = Product(
+
+            findViewById<TextView>(R.id.productName).text.toString(),
+            0,
+            "PLN",
+            findViewById<TextView>(R.id.price).text.toString().toBigDecimal(),
+            0
+        )
+        val manufacturerId: Int = (this.spinner!!.selectedItem as Manufacturer).id
+
+
+        productClient.addProduct(manufacturerId, product)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                this.setResult(Activity.RESULT_OK, null)
+                this.finish()
+            }, { throwable ->
+                Toast.makeText(this.applicationContext, "Add error: ${throwable.message}", Toast.LENGTH_LONG).show()
+            })
+    }
+
+    fun goBack(view: View) {
+        this.finish()
     }
 }

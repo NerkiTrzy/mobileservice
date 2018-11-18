@@ -25,7 +25,33 @@
 
         >
         </Spinner>
+        <EditText
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Product Name"
+        />
+        <EditText
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0,1,2,3,4,5,6,7,8,9"
+                android:hint="Product price" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Product"
+                    android:onClick="addProduct"
+            />
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:onClick="goBack"
+            />
 
+        </LinearLayout>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

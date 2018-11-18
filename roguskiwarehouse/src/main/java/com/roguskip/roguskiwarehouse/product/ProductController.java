@@ -5,6 +5,8 @@ import com.roguskip.roguskiwarehouse.manufacturer.Manufacturer;
 import com.roguskip.roguskiwarehouse.manufacturer.ManufacturerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,9 +38,9 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-    @PutMapping(path = "/products/{productId}/change-quantity", params ={"quantity"})
+    @PostMapping(path = "/products/{productId}/change-quantity")
     public Product changeQuantity(@PathVariable(value = "productId") Long productId,
-                                    @RequestParam(value = "quantity") Integer quantity) {
+                                    @Valid @RequestBody Integer quantity) {
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
@@ -58,5 +60,14 @@ public class ProductController {
         product.setQuantity(product.getQuantity() - quantity);
 
         return  productRepository.save(product);
+    }
+
+    @DeleteMapping(path = "/products/{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "productId") Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+        productRepository.delete(product);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 }

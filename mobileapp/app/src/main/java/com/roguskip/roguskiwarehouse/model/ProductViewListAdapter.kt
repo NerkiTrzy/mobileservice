@@ -15,15 +15,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.text.NumberFormat
 
-class ProductListAdapter(private val activity: Activity,
-                         productList: List<Product>,
-                         val context: Context) : BaseAdapter() {
+class ProductViewListAdapter(private val activity: Activity,
+                             productViewList: List<ProductView>,
+                             val context: Context) : BaseAdapter() {
 
-    private var productList = ArrayList<Product>()
-    val client by lazy { ProductApiClient.create() }
+    private var productList = ArrayList<ProductView>()
+    val client by lazy { ProductViewApiClient.create() }
 
     init {
-        this.productList = productList as ArrayList<Product>
+        this.productList = productViewList as ArrayList<ProductView>
         this.refreshProducts()
     }
 
@@ -55,7 +55,7 @@ class ProductListAdapter(private val activity: Activity,
         return vi
     }
 
-    private fun refreshProducts() {
+    fun refreshProducts() {
         client.getProducts()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
