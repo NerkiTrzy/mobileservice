@@ -10,4 +10,5 @@
     <string name="addProductTitle">Dodawanie produktu</string>
     <string name="facebook_app_id">1051433125061749</string>
     <string name="fb_login_protocol_scheme">fb1051433125061749</string>
+    <string name="sync">Synchronizuj</string>
 </resources>

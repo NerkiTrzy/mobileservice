@@ -32,7 +32,9 @@ public class Audit {
     @PrePersist
     public void prePersist() {
         creationDate = modificationDate = new Date();
-        uuid = UUID.randomUUID();
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+        }
     }
 
     @PreUpdate

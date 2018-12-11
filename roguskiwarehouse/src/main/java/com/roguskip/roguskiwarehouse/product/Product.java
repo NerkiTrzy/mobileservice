@@ -2,6 +2,7 @@ package com.roguskip.roguskiwarehouse.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.roguskip.roguskiwarehouse.manufacturer.Manufacturer;
+import com.roguskip.roguskiwarehouse.model.Audit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +25,7 @@ import java.util.Currency;
                                 query = Product.Queries.GET_ALL_PRODUCTS_QUERY)
         }
 )
-public class Product {
+public class Product extends Audit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -58,7 +59,8 @@ public class Product {
                         "p.price AS price, \n" +
                         "p.quantity as quantity, \n" +
                         "m.id AS manufacturerId, \n" +
-                        "m.name AS manufacturerName \n" +
+                        "m.name AS manufacturerName, \n" +
+                        "p.uuid AS productGUID \n" +
                 ") \n" +
                 "FROM Product p \n" +
                 "JOIN Manufacturer m ON m.id = p.manufacturer.id\n" +

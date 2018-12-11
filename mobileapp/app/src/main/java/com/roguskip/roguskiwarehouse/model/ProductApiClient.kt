@@ -12,8 +12,8 @@ import retrofit2.http.Path
 interface ProductApiClient {
     @POST("manufacturers/{manufacturerId}/products") fun addProduct(@Path("manufacturerId") id: Int,
                                                                     @Body product: Product): Completable
-    @POST("products/{productId}/change-quantity") fun changeQuantity(@Path("productId")id: Int, @Body quantity: Int) : Completable
-    @DELETE("products/{productId}") fun deleteProduct(@Path("productId") id: Int) : Completable
+    @POST("products/{productUuid}/change-quantity") fun changeQuantity(@Path("productUuid")productUuid: String, @Body quantity: Int) : Completable
+    @DELETE("products/{productUuid}") fun deleteProduct(@Path("productUuid") productUuid: String) : Completable
 
     companion object {
         fun create(): ProductApiClient {

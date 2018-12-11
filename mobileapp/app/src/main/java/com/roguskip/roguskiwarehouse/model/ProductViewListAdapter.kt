@@ -3,6 +3,7 @@ package com.roguskip.roguskiwarehouse.model
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +12,17 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
 import com.roguskip.roguskiwarehouse.R
+import com.roguskip.roguskiwarehouse.database.MyInternalStorage
+import com.roguskip.roguskiwarehouse.database.MyInternalStorage.isServerReachable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
 import java.text.NumberFormat
+
 
 class ProductViewListAdapter(private val activity: Activity,
                              productViewList: List<ProductView>,
@@ -56,16 +65,30 @@ class ProductViewListAdapter(private val activity: Activity,
     }
 
     fun refreshProducts() {
-        client.getProducts()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ result ->
+        if ( MyInternalStorage.isServerReachable(context)) {
+            client.getProducts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+                    MyInternalStorage.writeObject(context, "productList", result)
+
+                    productList.clear()
+                    productList.addAll(result)
+                    notifyDataSetChanged()
+                }, { error ->
+                    Toast.makeText(context, "Refresh error: ${error.message}", Toast.LENGTH_LONG).show()
+                    Log.e("ERRORS", error.message)
+                })
+        } else {
+            val localProducts = MyInternalStorage.readObject(context, "productList")
+            if (localProducts is ArrayList<*>) {
                 productList.clear()
-                productList.addAll(result)
+                productList.addAll(localProducts as ArrayList<ProductView>)
                 notifyDataSetChanged()
-            },{ error ->
-                Toast.makeText(context, "Refresh error: ${error.message}", Toast.LENGTH_LONG).show()
-                Log.e("ERRORS", error.message)
-            })
+            }
+        }
     }
+
+
+
 }

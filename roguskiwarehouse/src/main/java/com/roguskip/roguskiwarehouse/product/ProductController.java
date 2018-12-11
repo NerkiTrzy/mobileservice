@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -38,39 +39,26 @@ public class ProductController {
         return productRepository.save(product);
     }
 
-    @PostMapping(path = "/products/{productId}/change-quantity")
+    @PostMapping(path = "/products/{productUuid}/change-quantity")
    // @PreAuthorize("hasRole('USER')")
-    public Product changeQuantity(@PathVariable(value = "productId") Long productId,
+    public Product changeQuantity(@PathVariable(value = "productUuid") UUID productUuid,
                                     @Valid @RequestBody Integer quantity) {
 
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        Product product = productRepository.findByUuid(productUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productUuid", productUuid));
 
         product.setQuantity(product.getQuantity() + quantity);
 
         return  productRepository.save(product);
     }
 
-    @PutMapping(path = "/products/{productId}/decrease-quantity", params ={"quantity"})
-    //@PreAuthorize("hasRole('USER')")
-    public Product decreaseQuantity(@PathVariable(value = "productId") Long productId,
-                                    @RequestParam(value = "quantity") Integer quantity) {
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-
-        product.setQuantity(product.getQuantity() - quantity);
-
-        return  productRepository.save(product);
-    }
-
-    @DeleteMapping(path = "/products/{productId}")
+    @DeleteMapping(path = "/products/{productUuid}")
     //@PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "productId") Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+    public ResponseEntity<Void> deleteProduct(@PathVariable(value = "productUuid") UUID productUuid) {
+        Product product = productRepository.findByUuid(productUuid)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productUuid", productUuid));
 
         productRepository.delete(product);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

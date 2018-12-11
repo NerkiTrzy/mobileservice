@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.ListView
+import com.roguskip.roguskiwarehouse.database.MyInternalStorage
 import com.roguskip.roguskiwarehouse.model.ProductView
 import com.roguskip.roguskiwarehouse.model.ProductViewListAdapter
+import java.io.File
 import java.util.*
 
 class ProductListActivity : AppCompatActivity() {
@@ -19,6 +21,8 @@ class ProductListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.product_list)
+
+
 
         listView = findViewById(R.id.productListView)
         adapterView = ProductViewListAdapter(this, productList, this.applicationContext)
@@ -46,6 +50,11 @@ class ProductListActivity : AppCompatActivity() {
             startActivity(refresh)
             this.finish()
         }
+    }
+
+
+    fun syncWithServer(view: View) {
+        this.adapterView!!.refreshProducts()
     }
 
 }
