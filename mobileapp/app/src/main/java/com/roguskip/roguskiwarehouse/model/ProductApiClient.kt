@@ -14,6 +14,8 @@ interface ProductApiClient {
                                                                     @Body product: Product): Completable
     @POST("products/{productUuid}/change-quantity") fun changeQuantity(@Path("productUuid")productUuid: String, @Body quantity: Int) : Completable
     @DELETE("products/{productUuid}") fun deleteProduct(@Path("productUuid") productUuid: String) : Completable
+    @POST("operations/do-operations") fun doOperations(@Body operationList: List<Operation>) : Completable
+
 
     companion object {
         fun create(): ProductApiClient {

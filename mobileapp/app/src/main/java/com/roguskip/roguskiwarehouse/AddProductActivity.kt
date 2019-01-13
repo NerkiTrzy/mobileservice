@@ -61,12 +61,8 @@ class AddProductActivity : AppCompatActivity(){
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-
-                //Toast.makeText(this@AddProductActivity, manufacturerList[p2].name, LENGTH_LONG).show()
             }
-
         }
     }
 
@@ -91,7 +87,7 @@ class AddProductActivity : AppCompatActivity(){
                     this.setResult(Activity.RESULT_OK, null)
                     this.finish()
                 }, { throwable ->
-                    Toast.makeText(this.applicationContext, "Add error: ${throwable.message}", Toast.LENGTH_LONG).show()
+                    Log.e("ERRORS", throwable.message)
                 })
         } else {
             val productView = ProductView(manufacturerName, product.name, manufacturerId, product.price, product.quantity, product.id, product.currency, product.uuid)
@@ -101,14 +97,15 @@ class AddProductActivity : AppCompatActivity(){
                 MyInternalStorage.writeObject(applicationContext, "productList", localProducts)
             }
 
-            val addingOperations: ArrayList<ProductView> = try {
-                MyInternalStorage.readObject(applicationContext, "addingOperations") as ArrayList<ProductView>
+            val operationList: ArrayList<Operation> = try {
+                MyInternalStorage.readObject(applicationContext, "operationList") as ArrayList<Operation>
             } catch (e: Exception) {
                 ArrayList()
             }
-            addingOperations.add(productView)
 
-            MyInternalStorage.writeObject(applicationContext, "addingOperations", addingOperations)
+            operationList.add(Operation(UUID.randomUUID().toString(), OperationName.INSERT, productView, 0))
+
+            MyInternalStorage.writeObject(applicationContext, "operationList", operationList)
 
             this.setResult(Activity.RESULT_OK, null)
             this.finish()

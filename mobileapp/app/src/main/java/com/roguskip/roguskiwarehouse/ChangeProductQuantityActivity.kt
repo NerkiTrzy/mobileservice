@@ -7,17 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
-import com.roguskip.roguskiwarehouse.R.layout.product
 import com.roguskip.roguskiwarehouse.database.MyInternalStorage
+import com.roguskip.roguskiwarehouse.model.Operation
+import com.roguskip.roguskiwarehouse.model.OperationName
 import com.roguskip.roguskiwarehouse.model.ProductApiClient
 import com.roguskip.roguskiwarehouse.model.ProductView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class ChangeProductQuantityActivity : AppCompatActivity() {
     var productView : ProductView? = null
@@ -86,15 +83,15 @@ class ChangeProductQuantityActivity : AppCompatActivity() {
 
             MyInternalStorage.writeObject(applicationContext, "productList", localProducts)
 
-            val updateOperations: HashMap<String, Int> = try {
-                MyInternalStorage.readObject(applicationContext, "updateOperations") as HashMap<String, Int>
+            val operationList: java.util.ArrayList<Operation> = try {
+                MyInternalStorage.readObject(applicationContext, "operationList") as java.util.ArrayList<Operation>
             } catch (e: Exception) {
-                HashMap()
+                java.util.ArrayList()
             }
 
-            updateOperations[productView.productGUID] = findViewById<TextView>(R.id.changingQuantity).text.toString().toInt()
+            operationList.add(Operation(UUID.randomUUID().toString(), OperationName.UPDATE, productView, findViewById<TextView>(R.id.changingQuantity).text.toString().toInt()))
 
-            MyInternalStorage.writeObject(applicationContext, "updateOperations", updateOperations)
+            MyInternalStorage.writeObject(applicationContext, "operationList", operationList)
 
             this.setResult(Activity.RESULT_OK, null)
             this.finish()
@@ -123,15 +120,16 @@ class ChangeProductQuantityActivity : AppCompatActivity() {
 
                 MyInternalStorage.writeObject(applicationContext, "productList", localProducts)
 
-                val deleteOperations: ArrayList<String> = try {
-                    MyInternalStorage.readObject(applicationContext, "deleteOperations") as ArrayList<String>
+                val operationList: java.util.ArrayList<Operation> = try {
+                    MyInternalStorage.readObject(applicationContext, "operationList") as java.util.ArrayList<Operation>
                 } catch (e: Exception) {
-                    ArrayList()
+                    java.util.ArrayList()
                 }
 
-                deleteOperations.add(this.productView!!.productGUID)
+                operationList.add(Operation(UUID.randomUUID().toString(), OperationName.DELETE, this.productView!!, 0))
 
-                MyInternalStorage.writeObject(applicationContext, "deleteOperations", deleteOperations)
+                MyInternalStorage.writeObject(applicationContext, "operationList", operationList)
+
 
                 this.setResult(Activity.RESULT_OK, null)
                 this.finish()

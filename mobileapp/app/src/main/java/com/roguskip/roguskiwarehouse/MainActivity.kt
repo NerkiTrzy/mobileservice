@@ -1,6 +1,5 @@
 package com.roguskip.roguskiwarehouse
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,8 +12,6 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import org.jetbrains.anko.contentView
-import java.io.File
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

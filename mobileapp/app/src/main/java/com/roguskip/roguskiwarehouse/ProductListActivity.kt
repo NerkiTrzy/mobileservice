@@ -23,7 +23,6 @@ class ProductListActivity : AppCompatActivity() {
         setContentView(R.layout.product_list)
 
 
-
         listView = findViewById(R.id.productListView)
         adapterView = ProductViewListAdapter(this, productList, this.applicationContext)
         (listView as ListView).adapter = adapterView
@@ -34,8 +33,6 @@ class ProductListActivity : AppCompatActivity() {
              intent.putExtra("productView", productList.get(position))
              startActivityForResult(intent, 1)
          }
-
-
     }
 
     fun createProduct(view: View) {
@@ -51,7 +48,6 @@ class ProductListActivity : AppCompatActivity() {
             this.finish()
         }
     }
-
 
     fun syncWithServer(view: View) {
         this.adapterView!!.refreshProducts()
