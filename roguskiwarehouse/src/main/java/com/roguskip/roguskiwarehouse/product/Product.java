@@ -43,6 +43,9 @@ public class Product extends Audit {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "color")
+    private String color;
+
     @ManyToOne
     @JoinColumn(name = "manufacturer_id" )
     @JsonIgnore
@@ -60,7 +63,8 @@ public class Product extends Audit {
                         "p.quantity as quantity, \n" +
                         "m.id AS manufacturerId, \n" +
                         "m.name AS manufacturerName, \n" +
-                        "p.uuid AS productGUID \n" +
+                        "p.uuid AS productGUID, \n" +
+                        "COALESCE(p.color, 'Not specified') AS color \n" +
                 ") \n" +
                 "FROM Product p \n" +
                 "JOIN Manufacturer m ON m.id = p.manufacturer.id\n" +

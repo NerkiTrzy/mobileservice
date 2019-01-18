@@ -57,10 +57,12 @@ class ProductViewListAdapter(private val activity: Activity,
         val productName = vi.findViewById<TextView>(R.id.productName)
         val currencyPrice = vi.findViewById<TextView>(R.id.currencyPrice)
         val quantity = vi.findViewById<TextView>(R.id.quantity)
+        val color = vi.findViewById<TextView>(R.id.ProductColor)
         manufacturerTitle.text = this.productList[i].manufacturerName
         productName.text = this.productList[i].productName
         currencyPrice.text = NumberFormat.getCurrencyInstance().format(this.productList[i].price)
         quantity.text = "Quantity: " + this.productList[i].quantity.toString()
+        color.text = "Color: " + this.productList[i].color
         return vi
     }
 

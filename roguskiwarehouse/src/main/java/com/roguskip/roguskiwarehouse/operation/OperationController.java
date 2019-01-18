@@ -82,6 +82,8 @@ public class OperationController {
         Manufacturer manufacturer = manufacturerRepository.findById(productView.getManufacturerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Manufacturer", "Id", productView.getManufacturerId()));
 
+        if (productView.getColor() == null)
+            productView.setColor("Not Specified");
         product.setId(null);
         product.setUuid(UUID.fromString(productView.getProductGUID()));
         product.setManufacturer(manufacturer);
@@ -89,6 +91,7 @@ public class OperationController {
         product.setName(productView.getProductName());
         product.setPrice(productView.getPrice());
         product.setCurrency(Currency.getInstance("USD"));
+        product.setColor(productView.getColor());
         productRepository.save(product);
 
     }

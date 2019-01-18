@@ -74,7 +74,8 @@ class AddProductActivity : AppCompatActivity(){
             "PLN",
             findViewById<TextView>(R.id.price).text.toString().toBigDecimal(),
             0,
-            UUID.randomUUID().toString()
+            UUID.randomUUID().toString(),
+            findViewById<TextView>(R.id.color).text.toString()
         )
         val manufacturerId: Int = (this.spinner!!.selectedItem as Manufacturer).id
         val manufacturerName: String = (this.spinner!!.selectedItem as Manufacturer).name
