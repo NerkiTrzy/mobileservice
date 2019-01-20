@@ -7,6 +7,8 @@ import com.roguskip.roguskiwarehouse.model.OperationName;
 import com.roguskip.roguskiwarehouse.model.ProductView;
 import com.roguskip.roguskiwarehouse.product.Product;
 import com.roguskip.roguskiwarehouse.product.ProductRepository;
+import com.roguskip.roguskiwarehouse.warehouse.Warehouse;
+import com.roguskip.roguskiwarehouse.warehouse.WarehouseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class OperationController {
     private ProductRepository productRepository;
     private ManufacturerRepository manufacturerRepository;
     private OperationRepository operationRepository;
+    private WarehouseRepository warehouseRepository;
 
     @PostMapping(path = "operations/do-operations")
     public List<?> doOperations(@Valid @RequestBody ArrayList<Operation> operationList) {
@@ -82,6 +85,12 @@ public class OperationController {
         Manufacturer manufacturer = manufacturerRepository.findById(productView.getManufacturerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Manufacturer", "Id", productView.getManufacturerId()));
 
+        if (productView.getWarehouseId() == null)
+            productView.setWarehouseId(0L);
+
+        Warehouse warehouse = warehouseRepository.findById(productView.getWarehouseId())
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse", "Id", productView.getWarehouseId()));
+
         if (productView.getColor() == null)
             productView.setColor("Not Specified");
         product.setId(null);
@@ -92,6 +101,7 @@ public class OperationController {
         product.setPrice(productView.getPrice());
         product.setCurrency(Currency.getInstance("USD"));
         product.setColor(productView.getColor());
+        product.setWarehouse(warehouse);
         productRepository.save(product);
 
     }

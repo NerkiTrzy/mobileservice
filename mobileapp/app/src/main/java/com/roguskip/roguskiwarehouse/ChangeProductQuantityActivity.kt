@@ -70,7 +70,10 @@ class ChangeProductQuantityActivity : AppCompatActivity() {
                 this.productView!!.quantity + findViewById<TextView>(R.id.changingQuantity).text.toString().toInt(),
                 this.productView!!.productId,
                 this.productView!!.currency,
-                this.productView!!.productGUID
+                this.productView!!.productGUID,
+                this.productView!!.color,
+                this.productView!!.warehouseId,
+                this.productView!!.warehouseName
             )
 
 

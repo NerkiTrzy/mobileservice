@@ -23,7 +23,14 @@
                 android:id="@+id/manufacturersSpinner"
                 android:textColor="#000000"
                 android:padding="15dp"
-
+        >
+        </Spinner>
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/warehousesSpinner"
+                android:textColor="#000000"
+                android:padding="15dp"
         >
         </Spinner>
         <EditText

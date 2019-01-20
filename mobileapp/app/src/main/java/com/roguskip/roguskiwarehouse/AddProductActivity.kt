@@ -16,12 +16,15 @@ import java.util.*
 
 class AddProductActivity : AppCompatActivity(){
     private val manufacturerClient by lazy { ManufacturerApiClient.create() }
+    private val warehouseClient by lazy { WarehouseApiClient.create() }
     private val productClient by lazy { ProductApiClient.create() }
 
 
     private var manufacturerList: ArrayList<Manufacturer> = ArrayList()
+    private var warehousesList: ArrayList<Warehouse> = ArrayList()
 
     var spinner:Spinner? = null
+    var warehouseSpinner:Spinner? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,10 +35,15 @@ class AddProductActivity : AppCompatActivity(){
 
     private fun setManufacturerSpinner() {
         this.spinner = findViewById(R.id.manufacturersSpinner)
+        this.warehouseSpinner = findViewById(R.id.warehousesSpinner)
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, manufacturerList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner!!.adapter = adapter
+
+        val warehouseAdapter = ArrayAdapter(baseContext, android.R.layout.simple_spinner_item, warehousesList)
+        warehouseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        warehouseSpinner!!.adapter = warehouseAdapter
 
         if ( MyInternalStorage.isServerReachable(applicationContext)) {
             manufacturerClient.getManufacturers()
@@ -64,9 +72,41 @@ class AddProductActivity : AppCompatActivity(){
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
             }
         }
+
+        if ( MyInternalStorage.isServerReachable(applicationContext)) {
+            warehouseClient.getWarehouses()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ result ->
+                    MyInternalStorage.writeObject(applicationContext, "warehousesList", result)
+                    warehousesList.clear()
+                    warehousesList.addAll(result)
+                    warehouseAdapter.notifyDataSetChanged()
+                }, { error ->
+                    Log.e("ERRORS", error.message)
+                })
+        } else {
+            val localWarehouses = MyInternalStorage.readObject(applicationContext, "warehousesList")
+            if (localWarehouses is ArrayList<*>) {
+                warehousesList.clear()
+                warehousesList.addAll(localWarehouses as ArrayList<Warehouse>)
+                warehouseAdapter.notifyDataSetChanged()
+            }
+        }
+        warehouseSpinner!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+            }
+        }
     }
 
     fun addProduct(view: View) {
+        val warehouse: Warehouse = Warehouse((this.warehouseSpinner!!.selectedItem as Warehouse).id,
+                                            (this.warehouseSpinner!!.selectedItem as Warehouse).name,
+                                            (this.warehouseSpinner!!.selectedItem as Warehouse).extraPrice)
+
         val product: Product = Product(
 
             findViewById<TextView>(R.id.productName).text.toString(),
@@ -75,7 +115,8 @@ class AddProductActivity : AppCompatActivity(){
             findViewById<TextView>(R.id.price).text.toString().toBigDecimal(),
             0,
             UUID.randomUUID().toString(),
-            findViewById<TextView>(R.id.color).text.toString()
+            findViewById<TextView>(R.id.color).text.toString(),
+            warehouse.id
         )
         val manufacturerId: Int = (this.spinner!!.selectedItem as Manufacturer).id
         val manufacturerName: String = (this.spinner!!.selectedItem as Manufacturer).name
@@ -91,7 +132,9 @@ class AddProductActivity : AppCompatActivity(){
                     Log.e("ERRORS", throwable.message)
                 })
         } else {
-            val productView = ProductView(manufacturerName, product.name, manufacturerId, product.price, product.quantity, product.id, product.currency, product.uuid)
+            val productView = ProductView(manufacturerName, product.name, manufacturerId, product.price,
+                product.quantity, product.id, product.currency, product.uuid, product.color, warehouse.id, warehouse.name)
+
             val localProducts = MyInternalStorage.readObject(applicationContext, "productList")
             if (localProducts is ArrayList<*>) {
                 (localProducts as ArrayList<ProductView>).add(productView)

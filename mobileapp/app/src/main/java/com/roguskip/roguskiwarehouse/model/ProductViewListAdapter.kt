@@ -16,6 +16,7 @@ import com.roguskip.roguskiwarehouse.database.MyInternalStorage
 import com.roguskip.roguskiwarehouse.database.MyInternalStorage.isServerReachable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.find
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -58,11 +59,13 @@ class ProductViewListAdapter(private val activity: Activity,
         val currencyPrice = vi.findViewById<TextView>(R.id.currencyPrice)
         val quantity = vi.findViewById<TextView>(R.id.quantity)
         val color = vi.findViewById<TextView>(R.id.ProductColor)
+        val warehouseName = vi.findViewById<TextView>(R.id.warehouseName)
         manufacturerTitle.text = this.productList[i].manufacturerName
         productName.text = this.productList[i].productName
         currencyPrice.text = NumberFormat.getCurrencyInstance().format(this.productList[i].price)
         quantity.text = "Quantity: " + this.productList[i].quantity.toString()
         color.text = "Color: " + this.productList[i].color
+        warehouseName.text = this.productList[i].warehouseName
         return vi
     }
 

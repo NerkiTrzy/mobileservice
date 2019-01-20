@@ -3,6 +3,7 @@ package com.roguskip.roguskiwarehouse.product;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.roguskip.roguskiwarehouse.manufacturer.Manufacturer;
 import com.roguskip.roguskiwarehouse.model.Audit;
+import com.roguskip.roguskiwarehouse.warehouse.Warehouse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,23 +52,31 @@ public class Product extends Audit {
     @JsonIgnore
     private Manufacturer manufacturer;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id" )
+    @JsonIgnore
+    private Warehouse warehouse;
+
     static class Queries {
         static final String GET_ALL_PRODUCTS = "Product.getAllProducts";
 
         static final String GET_ALL_PRODUCTS_QUERY =
                 "SELECT new map( \n" +
                         "p.id AS productId, \n" +
-                        "p.name AS productName, \n" +
+                        "p.name || ' ' || COALESCE(w.name, '') AS productName, \n" +
                         "p.currency AS currency, \n" +
-                        "p.price AS price, \n" +
+                        "p.price + COALESCE(w.extraPrice, 0) AS price, \n" +
                         "p.quantity as quantity, \n" +
                         "m.id AS manufacturerId, \n" +
                         "m.name AS manufacturerName, \n" +
                         "p.uuid AS productGUID, \n" +
-                        "COALESCE(p.color, 'Not specified') AS color \n" +
+                        "COALESCE(p.color, 'Not specified') AS color \n," +
+                        "coalesce(w.id, 0) AS warehouseId, \n" +
+                        "coalesce(w.name, 'Not specified') AS warehouseName \n" +
                 ") \n" +
                 "FROM Product p \n" +
-                "JOIN Manufacturer m ON m.id = p.manufacturer.id\n" +
+                "JOIN Manufacturer m ON m.id = p.manufacturer.id \n" +
+                "LEFT JOIN Warehouse w ON w.id = p.warehouse.id \n" +
                 "ORDER BY m.name, p.name";
     }
 }

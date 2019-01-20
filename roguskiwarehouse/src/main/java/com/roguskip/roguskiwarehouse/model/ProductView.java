@@ -16,4 +16,5 @@ public class ProductView {
     private String currency;
     private String productGUID;
     private String color;
+    private Long warehouseId;
 }
